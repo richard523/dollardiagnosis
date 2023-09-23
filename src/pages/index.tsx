@@ -1,44 +1,37 @@
 'use client';
 
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useState, useEffect } from 'react'
 import Head from "next/head";
-import Link from "next/link";
-
 import { api } from "~/utils/api";
-import Anthropic from '@anthropic-ai/sdk';
-import { Completion, CompletionCreateParams } from "@anthropic-ai/sdk/resources";
-import { useCompletion } from 'ai/react';
+import {
+  createTRPCProxyClient,
+  unstable_httpBatchStreamLink,
+} from '@trpc/client';
+import { AppRouter } from "~/server/api/root";
+import SuperJSON from "superjson";
+import useTRPC from '@trpc/client';
 
 export const runtime = 'edge';
+const transformer = (data: any): string => {
+  if (typeof data === 'string') {
+    return data;
+  }
+
+  return SuperJSON.stringify(data);
+};
+
+const client = createTRPCProxyClient<AppRouter>({
+  links: [
+    unstable_httpBatchStreamLink({
+      url: 'http://localhost:3000',
+    }),
+  ],
+  transformer: SuperJSON,
+});
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const [apiData, setApiData] = useState(null); // State to store API response
-
-
-  // Function to fetch data from the API
-  const fetchData = async () => {
-    try {
-      // Make your API call here
-      const response = await fetch('https://httpbin.org/get'); // Replace with your API endpoint
-      const data = await response.json();
-      setApiData(data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  
-  const {
-    completion,
-    input,
-    stop,
-    isLoading,
-    handleInputChange,
-    handleSubmit,
-  } = useCompletion({
-    api: '/api/completion',
-  });
+  const hello = api.example.hello.useQuery({ text: "low budget mental health tool." });
+  const hello2 = api.example.fetchExternalData.useQuery({apiUrl: "https://api.anthropic.com/v1/complete"});
 
   return (
     <>
@@ -57,47 +50,25 @@ export default function Home() {
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+              
             </p>
             
           </div>
           {/* Button to fetch data */}
           <button
-              onClick={fetchData}
               className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
             >
               Fetch Your Results Now!
             </button>
+            {hello2 ? JSON.stringify(hello2) : "Loading tRPC query..."}
 
-            {/* Display API data */}
-            {apiData && (
-              <div>
-                <h2>API Response:</h2>
-                <pre>{JSON.stringify(apiData, null, 2)}</pre>
-              </div>
-            )}
-        </div>
-        
-          <form onSubmit={handleSubmit}>
-            <label>
-              Say something...
-              <input
-                className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
-                value={input}
-                onChange={handleInputChange}
-              />
-            </label>
-            <br/>
-            <output>Completion result: {completion}</output>
-            <button type="button" onClick={stop}>
-              Stop
-            </button>
-            <br/>
-            <button disabled={isLoading} type="submit">
-              Send
-            </button>
-          </form>
-        
+            {/* Test Display API data */}
+            
+        </div>     
+
       </main>
+      
+
       
     </>
     
@@ -134,9 +105,9 @@ function AuthShowcase() {
             </div>
           </span>
         }
-        
-        
-      </p>
+      
+      </p>      
+
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
@@ -146,8 +117,13 @@ function AuthShowcase() {
         <br></br>
         <br></br>
       </button>
+      
+      
     </div>
+    
+    
   );
 }
+
 
 

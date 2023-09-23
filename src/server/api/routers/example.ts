@@ -1,10 +1,15 @@
 import { z } from "zod";
+import { Axios } from "axios";
+
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
+import { env } from "~/env.mjs";
+import { AnthropicStream, StreamingTextResponse } from "ai";
+
 
 
 
@@ -13,23 +18,57 @@ export const exampleRouter = createTRPCRouter({
     .input(z.object({ text: z.string() }))
     .query(({ input }) => {
       return {
-        greeting: `Hello ${input.text}`,
+        greeting: `A ${input.text}`,
       };
     }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.db.example.findMany();
-  }),
+  // getAll: publicProcedure.query(({ ctx }) => {
+  //   return ctx.db.example.findMany();
+  // }),
 
-  getDiagnosis: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `hello ${input.text}`,
-      };
-    }),
+  
 
   getSecretMessage: protectedProcedure.query(() => {
-    return "Write a four page essay and select DIAGNOSE to see your results!";
+    return "Upload your essay here!";
+  }),
+
+  // External API Call Procedure
+  
+  fetchExternalData: publicProcedure
+  .input(z.object({ apiUrl: z.string() }))
+  .query(async ({ input }) => {
+    try {
+      const { apiUrl } = input; // Destructure the apiUrl from input
+
+      // Make an external API call using fetch
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-v2',
+          max_tokens_to_sample: 300,
+          temperature: 0.9,
+          stream: true,
+        }),
+      });
+
+      // Check if the response status is OK
+      if (!response.ok) {
+        throw new Error('External API request failed');
+      }
+
+      // Convert the response into a friendly text-stream
+      const stream = AnthropicStream(response);
+
+      // Respond with the stream
+      return new StreamingTextResponse(stream);
+    } catch (error) {
+      // Handle errors here
+      throw new Error("Failed to fetch external data");
+    }
   }),
 });
