@@ -6,6 +6,8 @@ import {
   publicProcedure,
 } from "~/server/api/trpc";
 
+
+
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -19,7 +21,15 @@ export const exampleRouter = createTRPCRouter({
     return ctx.db.example.findMany();
   }),
 
+  getDiagnosis: publicProcedure
+    .input(z.object({ text: z.string() }))
+    .query(({ input }) => {
+      return {
+        greeting: `hello ${input.text}`,
+      };
+    }),
+
   getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+    return "Write a four page essay and select DIAGNOSE to see your results!";
   }),
 });

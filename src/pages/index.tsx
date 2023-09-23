@@ -1,3 +1,5 @@
+'use client';
+
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, useEffect } from 'react'
 import Head from "next/head";
@@ -6,34 +8,38 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import Anthropic from '@anthropic-ai/sdk';
 import { Completion, CompletionCreateParams } from "@anthropic-ai/sdk/resources";
+import { useCompletion } from 'ai/react';
+
+export const runtime = 'edge';
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
-  const [responseText, setResponseText] = useState('');
+  const [apiData, setApiData] = useState(null); // State to store API response
 
-  useEffect(() => {
-    // Create a new instance of Anthropic with your API key
-    const anthropic = new Anthropic({
-      apiKey: 'my api key', // Replace with your actual API key or use process.env.ANTHROPIC_API_KEY
-    });
 
-    // Define the API call parameters
-    const params: CompletionCreateParams = {
-      prompt: `${Anthropic.HUMAN_PROMPT} how does a court case get to the Supreme Court?${Anthropic.AI_PROMPT}`,
-      max_tokens_to_sample: 300,
-      model: 'claude-2',
-    };
-
-    // Make the API call
-    anthropic.completions.create(params)
-      .then((completion: Completion) => {
-        setResponseText(completion.toString());
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error);
-      });
-  }, []);
+  // Function to fetch data from the API
+  const fetchData = async () => {
+    try {
+      // Make your API call here
+      const response = await fetch('https://httpbin.org/get'); // Replace with your API endpoint
+      const data = await response.json();
+      setApiData(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
   
+  const {
+    completion,
+    input,
+    stop,
+    isLoading,
+    handleInputChange,
+    handleSubmit,
+  } = useCompletion({
+    api: '/api/completion',
+  });
+
   return (
     <>
       <Head>
@@ -42,31 +48,55 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className=" flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#E2FDFF] to-[#5465FF]">
-        <div> 
-          <h1>API Response:</h1>
-          <p>{responseText}</p>
-        </div>
-        <div>
-          <textarea className="box-border h-200 w-200 p-4 
-                  border-4 m4">
-                
-          </textarea>
-        </div>
+        <AuthShowcase />
+        
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             DollarDiagnosis
           </h1>
-          <h2 className="The ">
-            How do you feel?
-          </h2>
-          
           <div className="flex flex-col items-center gap-2">
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
             </p>
-            <AuthShowcase />
+            
           </div>
+          {/* Button to fetch data */}
+          <button
+              onClick={fetchData}
+              className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+            >
+              Fetch Your Results Now!
+            </button>
+
+            {/* Display API data */}
+            {apiData && (
+              <div>
+                <h2>API Response:</h2>
+                <pre>{JSON.stringify(apiData, null, 2)}</pre>
+              </div>
+            )}
         </div>
+        
+          <form onSubmit={handleSubmit}>
+            <label>
+              Say something...
+              <input
+                className="fixed w-full max-w-md bottom-0 border border-gray-300 rounded mb-8 shadow-xl p-2"
+                value={input}
+                onChange={handleInputChange}
+              />
+            </label>
+            <br/>
+            <output>Completion result: {completion}</output>
+            <button type="button" onClick={stop}>
+              Stop
+            </button>
+            <br/>
+            <button disabled={isLoading} type="submit">
+              Send
+            </button>
+          </form>
+        
       </main>
       
     </>
@@ -84,18 +114,40 @@ function AuthShowcase() {
     { enabled: sessionData?.user !== undefined }
   );
 
+  
+  
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <p className="text-center text-2xl text-white">
-        {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
-        {secretMessage && <span> - {secretMessage}</span>}
+        {secretMessage && <span> {secretMessage} </span>}
+        <br/>
+        {sessionData && <span>Logged in as {sessionData.user?.name}
+            <div  className="rounded-lg">
+              <textarea className="box-border h-200 w-200 p-4 
+                  border-4 m4">
+              </textarea>
+              <br/>
+              <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20">
+                DIAGNOSE
+              </button>
+              
+            </div>
+          </span>
+        }
+        
+        
       </p>
       <button
         className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}
       >
+        <br></br>
         {sessionData ? "Sign out" : "Sign in"}
+        <br></br>
+        <br></br>
       </button>
     </div>
   );
 }
+
+
