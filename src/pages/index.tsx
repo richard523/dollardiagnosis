@@ -56,91 +56,7 @@ function AuthShowcase() {
   );
 
   // WE RAN OUT OF TIME, ANTHROPIC UPDATED THEIR DOCS YESTERDAY AND BROKE EVERYTHING
-  const textArray = [
-    <p> 
-
-    1
-    
-    2
-    
-    3
-    Diagnosis: Major Depressive Disorder, Single Episode, Moderate
-    
-    Diagnostic Criteria:
-    
-    Depressed mood for most of the day, nearly every day, as indicated by either subjective report (e.g., feeling sad, down, empty, or hopeless) or observation made by others (e.g., appearing tearful, desolate, or downcast)
-    Markedly diminished interest or pleasure in all or almost all activities for most of the day, nearly every day
-    Significant weight change when not dieting (either a 5% weight gain or loss in a month) or decrease or increase in appetite nearly every day
-    Insomnia or hypersomnia nearly every day
-    Psychomotor agitation or retardation nearly every day
-    Fatigue or loss of energy nearly every day
-    Feelings of worthlessness or excessive or inappropriate guilt (which may be delusional) nearly every day
-    Diminished ability to think or concentrate, or indecisiveness, nearly every day
-    Recurrent thoughts of death (not just fear of dying), recurrent suicidal ideation without a specific plan, or a suicide attempt
-    Differential Diagnosis:
-    
-    Other depressive disorders, such as persistent depressive disorder (dysthymia) or bipolar disorder
-    Adjustment disorder with depressed mood
-    Substance-induced depressive disorder
-    Medical conditions that can cause depressive symptoms, such as thyroid problems, cancer, or neurological disorders
-    Prognosis:
-    
-    The prognosis for major depressive disorder is generally good. Most people with this disorder recover with treatment. However, some people may experience recurrent episodes of depression.
-    
-    Treatment:
-    
-    The most effective treatments for major depressive disorder are psychotherapy and medication. Psychotherapy can help people to understand and manage their symptoms, and to develop coping skills. Medication can help to improve mood and energy levels.
-    
-    Recommendations:
-    
-    I recommend that you begin individual psychotherapy with a qualified mental health professional.
-    I also recommend that you see a psychiatrist to discuss whether medication may be helpful for you.
-    In the meantime, there are some things you can do to help yourself manage your symptoms, such as:
-    Getting regular exercise
-    Eating a healthy diet
-    Getting enough sleep
-    Avoiding alcohol and drugs
-    Spending time with loved ones
-    Doing activities that you enjoy
-    If you are experiencing suicidal thoughts, please reach out for help immediately. You can call the National Suicide Prevention Lifeline at 1-800-273-TALK (8255) or visit their website at https://suicidepreventionlifeline.org/.</p>,
-    <p>
-
-    1
-    Diagnosis: Generalized Anxiety Disorder (GAD)
-    
-    Diagnostic Criteria:
-    
-    Excessive anxiety and worry (apprehensive expectation) occurring most days for at least 6 months, over matters that are uncontrollable.
-    The worry is excessive or disproportionate to the actual threat posed by the events or activities that are worried about.
-    The worry is difficult to control.
-    The worry and anxiety cause clinically significant distress or impairment in social, occupational, or other important areas of functioning.
-    The worry is not attributable to the effects of a substance (e.g., a drug of abuse or a medication) or another medical condition (e.g., hyperthyroidism).
-    Differential Diagnosis:
-    
-    Other anxiety disorders, such as social anxiety disorder, panic disorder, or specific phobia
-    Substance-induced anxiety disorder
-    Medical conditions that can cause anxiety symptoms, such as thyroid problems, heart disease, or caffeine withdrawal
-    Prognosis:
-    
-    The prognosis for generalized anxiety disorder is generally good. Most people with this disorder can recover with treatment. However, some people may experience recurrent episodes of anxiety.
-    
-    Treatment:
-    
-    The most effective treatments for generalized anxiety disorder are psychotherapy and medication. Psychotherapy can help people to understand and manage their anxiety, and to develop coping skills. Medication can help to reduce anxiety and worry symptoms.
-    
-    Recommendations:
-    
-    I recommend that you begin individual psychotherapy with a qualified mental health professional.
-    I also recommend that you see a psychiatrist to discuss whether medication may be helpful for you.
-    In the meantime, there are some things you can do to help yourself manage your anxiety symptoms, such as:
-    Getting regular exercise
-    Eating a healthy diet
-    Getting enough sleep
-    Avoiding alcohol and drugs
-    Practicing relaxation techniques, such as deep breathing or meditation
-    Spending time with loved ones
-    Doing activities that you enjoy
-    If you are experiencing anxiety symptoms that are severe or interfering with your daily life, please reach out for help from a mental health professional.</p>, 
+  const textArray = [ ,
     <p>
 
     1
@@ -216,7 +132,7 @@ function AuthShowcase() {
                 <h1>____</h1>
                 
                 <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={generateRandomText}>Fetch Your Results Now!</button>
-                <p>{text}</p>
+                <p>{text && <p>{text}</p>}</p>
               </div>
              </div>
             </div>
