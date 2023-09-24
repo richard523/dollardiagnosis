@@ -3,13 +3,12 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { api } from "~/utils/api";
-import { useChat, useCompletion } from 'ai/react';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 export const runtime = 'experimental-edge';
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "mental health assessment tool." });
-  const complete = api.example.anthropicComplete.useQuery({prompt: "hEaiosjdaoisjfoiasjfoaisjfLLO"});
+  // const complete = api.example.anthropicComplete.useQuery({prompt: "hEaiosjdaoisjfoiasjfoaisjfLLO"});
 
 
   return (
@@ -31,7 +30,7 @@ export default function Home() {
             <p className="text-2xl text-white">
               {hello.data ? hello.data.greeting : "Loading tRPC query..."}
               
-              
+
             </p>
             
           </div>
