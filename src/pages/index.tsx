@@ -56,7 +56,7 @@ function AuthShowcase() {
   );
 
   // WE RAN OUT OF TIME, ANTHROPIC UPDATED THEIR DOCS YESTERDAY AND BROKE EVERYTHING
-  const textArray = [ ,
+  const textArray = [<br/>, <br/>,
     <p>
 
     1
