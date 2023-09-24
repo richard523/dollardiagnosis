@@ -1,28 +1,22 @@
-# Create T3 App
+# Inspiration
+## Psychiatrists and psychologists will often tell a patient to journal their thoughts and utilize that writing as one of the tools for diagnosis. We hope that DollarDiagnosis can serve as a bridge between real therapy and self-diagnosis through social media and Google!
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+# What it does
+Securely logs a user in and provides a diagnosis for each journal they write. The hope is that people gain awareness of their mental wellness and it can also serve as a method to un-diagnose patients as they improve their tools and strategies for coping with mental health.
 
-## What's next? How do I make an app with this?
+# How we built it
+Utilized T3 stack because we need quick usage of authentication for a secure medical application.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+# Challenges we ran into
+The client side for NextJS refused to connect with Claud API and they had their most recent update yesterday so these interactions are still brand new! I'm hoping that I can have some work arounds soon.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# Accomplishments that we're proud of
+We're proud that we finished up our MVP and will continue to work on this product in the future!
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+# What we learned
+We learned that authentication/security design has an important role in medicine.
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# What's next for DollarDiagnosis
+Prompt Engineering accurate diagnosis and testing Google's upcoming MedAI.
+Take in previous context from a user and have a continued stream of improvement.
+Communication and prompt engineering between top psychologists in pursuit of understanding how to best heal the mind, best therapies, and coping strategies.
